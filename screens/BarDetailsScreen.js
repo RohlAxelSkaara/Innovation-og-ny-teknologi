@@ -3,12 +3,7 @@ import * as React from 'react';
 import {
     View,
     Text,
-    Platform,
-    FlatList,
     StyleSheet,
-    Button,
-    Alert,
-    SafeAreaView,
     Dimensions,
     ScrollView,
     TouchableOpacity
@@ -16,12 +11,11 @@ import {
 import {useEffect, useState} from "react";
 import MapView, { Marker,PROVIDER_GOOGLE } from 'react-native-maps';
 import firebase from 'firebase';
-import Constants from "expo-constants";
+
 import * as Location from "expo-location";
 import {Accuracy} from "expo-location";
 import darkStyle from "../styles/darkStyle";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import getDirections from 'react-native-google-maps-directions'
+
 
 
 
@@ -32,6 +26,7 @@ const BarDetailsScreen = ({route,navigation}) => {
     const windowHeight = Dimensions.get('window').height;
 
 
+    //Get users current location
     const updateLocation = async () => {
         await Location.getCurrentPositionAsync({accuracy: Accuracy.BestForNavigation}).then((item)=>{
             setCurrentLocation(item.coords)
@@ -39,25 +34,23 @@ const BarDetailsScreen = ({route,navigation}) => {
         } );
     };
 
+    //Update user location
     useEffect (() => {
         updateLocation()
     },[]);
 
 
     const [bar,setBar] = useState({});
-
     useEffect(() => {
-        /*Henter car values og sætter dem*/
         setBar(route.params.bar[1]);
-
-
-        /*Når vi forlader screen, tøm object*/
         return () => {
             setBar({})
         }
     });
 
+    //Find all the user's friends
     const [friends,setFriends] = useState()
+    //num will be used when loop through our list of friends, then check if they are at this bar or not
     const [num,setNum] = useState()
 
     useEffect(() => {
@@ -67,8 +60,12 @@ const BarDetailsScreen = ({route,navigation}) => {
                 .ref(`/users/${firebase.auth().currentUser.uid}/friends`)
                 .on('value', snapshot => {
 
-                    setFriends(Object.values(snapshot.val()))
-                    setNum(Object.values(snapshot.val()).length)
+
+                    //Object.values cannot be null
+                    if (snapshot.val() != null) {
+                        setFriends(Object.values(snapshot.val()))
+                        setNum(Object.values(snapshot.val()).length)
+                    }
 
                 });
         }
@@ -80,15 +77,16 @@ const BarDetailsScreen = ({route,navigation}) => {
 
 
 
-
+    //Values will store the user's friends who are at this location
     let values = []
+    //Loop though our list of friends
     for(let i = 0; i < num; i++){
-
+      //Using the uid, we find that user
         firebase
             .database()
             .ref(`/users/${friends[i]}`)
             .on('value', snapshot => {
-
+                //If that user location, and the bar match, the user will be added to the values array
                 if(snapshot.val().location == bar.name){
                    values.push(snapshot.val().firstname +', ')
                 }
@@ -98,24 +96,8 @@ const BarDetailsScreen = ({route,navigation}) => {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //Add current this bar as current location
     const iAmHere = async () => {
-
         await
             firebase.database().ref(`/users/${firebase.auth().currentUser.uid}`).update(
                 {location: bar.name}
@@ -124,11 +106,10 @@ const BarDetailsScreen = ({route,navigation}) => {
 
 
 
-    //for(let i = 0; i < friends )///
 
 
 
-    let ratingDollar = '$'.repeat(bar.price)
+
 
 
     if (!bar) {
@@ -136,8 +117,7 @@ const BarDetailsScreen = ({route,navigation}) => {
     }
 
 
-//https://www.youtube.com/watch?v=nErdlbLWqtA&ab_channel=ProgrammingWithPrem
-    //all content
+
     return (
 
 
@@ -148,7 +128,7 @@ const BarDetailsScreen = ({route,navigation}) => {
                             <View style={styles.line}>
                         <Text style={styles.barInfo}>{bar.address}</Text>
                         <Text style={styles.barInfo}>{'$'.repeat(bar.price)}</Text>
-                        <Text style={styles.barInfo}>Rating: {bar.rating}</Text>
+                        <Text style={styles.barInfo}>{'★'.repeat(bar.rating)}</Text>
                         <Text style={styles.barInfo}>Friends here:</Text>
                         <Text style={styles.barInfo}>{values}</Text>
 

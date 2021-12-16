@@ -27,10 +27,10 @@ function LoginForm() {
     const [errorMessage, setErrorMessage] = useState(null)
 
     /*
-    * Metoden herunder håndterer login af en eksisterende bruger ved at anvende den prædefinerede metode, som stilles til rådighed af firebase
-    * signInWithEmailAndPassword tager en mail og et password med som argumenter og foretager et asynkront kald, der eksekverer login i firebase
-    * Opstår der fejl under forsøget på login, vil der i catch blive fremsat en fejlbesked, som, ved brug af
-    * setErrorMessage, angiver værdien for state-variablen, errormessage
+     * The predefined method signInWithEmailAndPassword to log in based on email and password
+     *
+     *   if error is catched, error message is set to the errorMessage state variable, then rendered
+     *
     */
     const handleSubmit = async () => {
         try {
@@ -44,9 +44,7 @@ function LoginForm() {
 
 
 
-//I return oprettes en tekstkomponent, der angiver at dette er loginfrom
-//Dernæst er der to inputfelter, som løbeende sætter værdien af state-variablerne, mail og password.
-// Afslutningsvis, angives det at, hvis errorMessage får fastsat en værdi, skal denne udskrives i en tekstkomponent.
+//Input fields for log in form
     return (
         <View style={styles.container}>
             <Text style={styles.header}>NITEOUT</Text>

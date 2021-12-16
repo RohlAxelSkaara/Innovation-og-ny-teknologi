@@ -15,7 +15,7 @@ const BarList = ({navigation}) => {
     const [bars, setBars] = useState({})
     const [filter, setFilter] = useState()
 
-
+    //Useffect to get the user´s information, it is used for filtering the list of bars later
     useEffect(() => {
         if (!filter) {
             firebase
@@ -24,14 +24,13 @@ const BarList = ({navigation}) => {
                 .on('value', snapshot => {
                     setFilter(Object.values(snapshot.val()))
                 });
-            console.log(filter)
         }
     }, []);
 
 
 
 
-
+    //Useffect to get all the locations (bars)
     useEffect(() => {
         if (Object.keys(bars).length === 0) {
             firebase
@@ -44,23 +43,21 @@ const BarList = ({navigation}) => {
         }
     });
 
-    // Vi viser ingenting hvis der ikke er data
+    //If no bars are found
     if (!bars) {
         return <Text>Loading...</Text>;
     }
 
+    //When a bar is selected, this function will navigate to the bar detail screen
     const handleSelectBar = id => {
-
-        /*Her søger vi direkte i vores array af biler og finder bil objektet som matcher idet vi har tilsendt*/
         const bar = Object.entries(bars).find(bar => bar[0] === id /*id*/)
         console.log(bar + 'hello')
-
         navigation.navigate('Bar Details', {bar})
 
     };
 
 
-    // Flatlist forventer et array. Derfor tager vi alle values fra vores cars objekt, og bruger som array til listen
+
     const barArray = Object.values(bars);
     const barKeys = Object.keys(bars);
 
@@ -72,7 +69,6 @@ const BarList = ({navigation}) => {
                 backgroundColor={'#2a2727'}
                 data={barArray}
 
-                // Vi bruger carKeys til at finde ID på den aktuelle bil og returnerer dette som key, og giver det med som ID til CarListItem
                 keyExtractor={(item, index) => barKeys[index]}
 
                 renderItem={({item, index}) => {

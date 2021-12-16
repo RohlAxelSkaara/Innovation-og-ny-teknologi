@@ -11,6 +11,7 @@ import firebase from 'firebase';
 
 function SignUpForm() {
     //Instantiering af state-variabler, der skal benyttes i SignUpForm
+    //Initiating state-variables to be used in the signupform
     const [email, setEmail] = useState('')
     const [firstname, setFirstname] = useState('')
     const [lastname, setLastname] = useState('')
@@ -21,10 +22,9 @@ function SignUpForm() {
 
 
     /*
-   * Metoden herunder håndterer oprettelse af brugere ved at anvende den prædefinerede metode, som stilles til rådighed af firebase
-   * signInWithEmailAndPassword tager en mail og et password med som argumenter og foretager et asynkront kald, der eksekverer en brugeroprettelse i firebase
-   * Opstår der fejl under forsøget på oprettelse, vil der i catch blive fremsat en fejlbesked, som, ved brug af
-   * setErrorMessage, angiver værdien for state-variablen, errormessage
+   * The predefined method createUserWithEmailAndPassword creates a user based on email and password
+   *   firebase.database().ref('users/' + res.user.uid).set sets the name of the user, and inital filter
+   *   if error is catched, error message is set to the errorMessage state variable, then rendered
    */
     const handleSubmit = async() => {
         try {
@@ -43,10 +43,8 @@ function SignUpForm() {
 
     }
 
-//I return oprettes en tekstkomponent, der angiver at dette er SignUpfrom
-//Dernæst er der to inputfelter, som løbeende sætter værdien af state-variablerne, mail og password.
-// Afslutningsvis, angives det at, hvis errorMessage får fastsat en værdi, skal denne udskrives i en tekstkomponent.
 
+//Input fields for signupform
     return (
         <View style={styles.container}>
             <Text style={styles.header}>NITEOUT</Text>
@@ -97,7 +95,7 @@ function SignUpForm() {
     );
 }
 
-//Lokal styling til brug i LoginFrom
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

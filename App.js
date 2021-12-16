@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import { SafeAreaProvider,  initialWindowMetrics } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native';
-import { Text, View, StyleSheet } from 'react-native';
+import {Text, View, StyleSheet, Dimensions} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from "@react-navigation/stack";
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -38,7 +38,7 @@ const Stack = createStackNavigator();
      let [fontsLoaded, error] = useFonts({
          SquadaOne_400Regular,
      });
-     //Setter våres database detaljer til en variabel, slik at denne kan brukes senere til kommunikasjon med databasen
+
 
      //Firebase db details for communication with the database
      const firebaseConfig = {
@@ -63,13 +63,15 @@ const Stack = createStackNavigator();
      //State variable for our user
      const [user, setUser] = useState({loggedIn: false});
 
-
-
+     const windowHeight = Dimensions.get('window').height;
+     console.log(windowHeight)
+     let tabHeight = (windowHeight/100)*10
+     console.log(tabHeight)
 //Predefined function from firebase. Checks if the user is logged in or not
      function onAuthStateChange(callback) {
          return firebase.auth().onAuthStateChanged(user => {
              if (user) {
-                 //Hvis brukeren er logged inn settes state variabelen til brukere ssom ble laget tidligere til true
+
                  //If the user is logged in, the state variable is changed to true
                  callback({loggedIn: true, user: user});
              } else {
@@ -288,8 +290,11 @@ const Stack = createStackNavigator();
                          position: 'absolute',
                          left: 0,
                          right: 0,
-                         bottom: 0,//0
-                         height: 60 //60
+                         bottom: 0,//0 -30
+                         height: 60 //60 110
+                     },
+                     safeAreaInsets: {
+                         bottom: 0,
                      }
 
                  }}

@@ -64,7 +64,7 @@ function App() {
 );
 }
 
-//Checks if the user is logged in or not. If not, then the user will be sent to the login/signup page, else the mainpage
+
 
 export default App
 

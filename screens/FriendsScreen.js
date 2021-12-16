@@ -11,7 +11,7 @@ const FriendList = ({navigation}) => {
         SquadaOne_400Regular,
     });
 
-    //Saving friends retroved from the database
+    //Saving friends retrieved from the database
     const [friends,setFriends] = useState()
 
     useEffect(() => {
@@ -33,10 +33,9 @@ const FriendList = ({navigation}) => {
 
     console.log(friends)
 
+    //Navigates to the users profile
     const handleSelectUser = (id) => {
-
         console.log(id)
-        /*Her søger vi direkte i vores array af biler og finder bil objektet som matcher idet vi har tilsendt*/
         const friend = Object.entries(friends).find(friend => friend[0] === id /*id*/)
         console.log(friend)
         navigation.navigate('Friend Details', {friend})
@@ -45,7 +44,7 @@ const FriendList = ({navigation}) => {
 
 
 
-    // Flatlist forventer et array. Derfor tager vi alle values fra vores cars objekt, og bruger som array til listen
+
     const friendArray = Object.values(friends);
     const friendKeys = Object.keys(friends);
 
@@ -54,7 +53,6 @@ const FriendList = ({navigation}) => {
             style={styles.flatlist}
             backgroundColor={'#2a2727'}
             data={friendArray}
-            // Vi bruger carKeys til at finde ID på den aktuelle bil og returnerer dette som key, og giver det med som ID til CarListItem
             renderItem={({ item, index }) => {
                 return(
                     <TouchableOpacity style={styles.container} onPress={() => handleSelectUser(friendKeys[index])}>

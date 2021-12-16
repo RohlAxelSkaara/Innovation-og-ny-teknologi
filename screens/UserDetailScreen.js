@@ -16,15 +16,15 @@ const UserDetailScreen = ({navigation,route}) => {
     //Finds the user currently visited to render information
     const [user,setUser] = useState({});
     useEffect(() => {
-        /*Henter car values og sætter dem*/
+
         setUser(route.params.friend[1]);
-        /*Når vi forlader screen, tøm object*/
+
         return () => {
             setUser({})
         }
     });
 
-   //Adds the visited users uid under friends in the current user database
+   //Adds the visited users uid under friends in the current users database
     const addFriend = async () => {
         await
             firebase.database().ref(`/users/${firebase.auth().currentUser.uid}/friends`).push(

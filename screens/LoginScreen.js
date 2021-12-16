@@ -1,9 +1,6 @@
-import {StyleSheet, Text, View, Button, Input, Form, TouchableOpacity} from "react-native";
+import {StyleSheet, View} from "react-native";
 import * as React from "react";
-import {useEffect, useState} from "react";
-import firebase from "firebase";
-import { Rating, AirbnbRating } from 'react-native-ratings';
-import LoginForm from "../components/LoginForm";
+
 
 
 
@@ -13,7 +10,6 @@ function LoginScreen({prop}) {
 
     return(
         <View style={styles.container}>
-
             <LoginScreen/>
         </View>
     )

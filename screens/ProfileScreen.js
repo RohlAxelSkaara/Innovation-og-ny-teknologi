@@ -1,12 +1,4 @@
 
-//Skal denne beholdes??
-//Skal denne beholdes??//Skal denne beholdes??
-//Skal denne beholdes??
-//Skal denne beholdes??
-//Skal denne beholdes??
-//Skal denne beholdes??
-//Skal denne beholdes??
-//Skal denne beholdes??
 
 
 import * as React from 'react';
@@ -14,27 +6,19 @@ import {
     View,
     Text,
     StyleSheet,
-    TextInput,
-    RadioInput,
-    Box,
-    Button,
-    Alert,
-    ScrollView,
-    SafeAreaView, TouchableOpacity, TextPropTypes,
+    TouchableOpacity
 } from 'react-native';
 import firebase from 'firebase';
 import {useEffect, useState} from "react";
-import {AirbnbRating} from "react-native-ratings";
+
 
 const ProfileScreen = ({navigation,route}) => {
 
     const user =  firebase.auth().currentUser;
 
 
-
+    //useState for the current user
     const [userDetails,setUserDetails] = useState('')
-
-
     useEffect(() => {
               firebase
                 .database()
@@ -47,6 +31,7 @@ const ProfileScreen = ({navigation,route}) => {
     },[]);
 
 
+    //User log out function
     const handleLogOut = async () => {
         await firebase.auth().signOut();
     };

@@ -21,7 +21,7 @@ function SignupScreen({prop}) {
 
 export default SignupScreen
 
-ç
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

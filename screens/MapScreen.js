@@ -6,7 +6,6 @@ import firebase from 'firebase';
 import Constants from "expo-constants";
 import * as Location from "expo-location";
 import {Accuracy} from "expo-location";
-import {createStackNavigator} from "@react-navigation/stack";
 import { useNavigation } from '@react-navigation/native';
 import darkStyle from "../styles/darkStyle";
 
@@ -31,6 +30,7 @@ const All = ({navigation}) =>{
     useEffect(()=>{
         let data = firebase.database().ref('locations/');
         data.once('value', (snapshot) => {
+
             const values=Object.values(snapshot.val()).map(value=>{
                 return {
                     data:value.data,
@@ -44,8 +44,7 @@ const All = ({navigation}) =>{
                     longitude:parseFloat(value.longitude),
                 }
             })
-            //Pushes the locations to the datay array
-
+            //sets the Datay to the value of the locations
             setDatay(values)
         });
     },[])
@@ -56,7 +55,7 @@ const All = ({navigation}) =>{
 
 
 
-    //Save the filter settings set by the user
+    //Filter settings set by the user
     const [rating, setRating] = useState(1)
 
     //Query the users filter settings, then save it to filter
@@ -71,7 +70,6 @@ const All = ({navigation}) =>{
 
     },[]);
 
-  console.log(rating)
 
 
 
@@ -91,13 +89,65 @@ const All = ({navigation}) =>{
 
 
 
+   //To show the user number of friends on each location, we will first need to retrieve the users friends
+   //Friends will contain the uid of our friends
+    const [friends,setFriends] = useState()
+   //We also save number of friends, this will be used for when we try to match or friends with their current location
+    const [num,setNum] = useState()
+    useEffect(() => {
+        if(!friends) {
+            firebase
+                .database()
+                .ref(`/users/${firebase.auth().currentUser.uid}/friends`)
+                .on('value', snapshot => {
+                    if(snapshot.val() != null) {
+                        setFriends(Object.values(snapshot.val()))
+                        setNum(Object.values(snapshot.val()).length)
+                    }
+                });
+        }
+    },[]);
+
+
+
+
+
+    //This array will save number of friends for each bar
+    let markNum = [];
+    //In this nested loop, we first go through each marker(bar)
+    for(let i = 0; i < marker.length; i++){
+        //Counter for number of friends at each bar
+        let numOfFriends = 0;
+        //Another loop, here we retrieve the users friends by the uid we got from the friends state hook earlier
+        for(let j = 0; j < num; j++){
+            firebase
+                .database()
+                .ref(`/users/${friends[j]}`)
+                .on('value', snapshot => {
+
+                    //For each bar, we test it with the location of each friend
+                    if(snapshot.val().location == marker[i].name){
+                        //If the friends location and the bar match, numOfFriends will increase by 1
+                        numOfFriends++
+                    }
+
+
+      })
+     }
+        //Pushes the number of friends at each to numOfFriends
+        markNum.push(numOfFriends)
+    }
+
+
+
+
     //State variables for the permission to track the user and give the current locations
     const [hasLocationPermission, setlocationPermission] = useState(false)
     const [currentLocation, setCurrentLocation] = useState(null)
 
 
     /*
-    Function uses the predefined method requestForegroundPermissionsAsync, which alerts the user with a reqest
+    Function uses the predefined method requestForegroundPermissionsAsync, which alerts the user with a request
     to find and use the device´s current location. The result of the request is then set to the location permission state.
     */
     const getLocationPermission = async () => {
@@ -152,7 +202,6 @@ const All = ({navigation}) =>{
 
 
 
-   //This should be removed
     const Load = () =>{return <Text>loading</Text>}
 
 
@@ -171,7 +220,7 @@ const All = ({navigation}) =>{
     }
 
 
-    //Queriyng all the bars
+    //To navigate to the bars when the markerbox is pressed
     const [bars, setBars] = useState()
     useEffect(() => {
         if (!bars) {
@@ -186,12 +235,10 @@ const All = ({navigation}) =>{
 
 
 
-
-
     //To use the navigation dependencie to move to the selected bar
     const nav = useNavigation();
 
-    let nrOfFriend = 0
+
 
 
 
@@ -241,8 +288,8 @@ const All = ({navigation}) =>{
                             <View style={styles.markerBox} >
                                 <View >
                                     <Text style={styles.markerTitle} >{i.name} </Text>
-                                    <Text style={styles.markerDescription}>{i.type+"\nRating:" + i.rating + '\n'
-                                    + '$'.repeat(i.price) + '\n' + 'Friends here: ' + '\n' + i.guests }</Text>
+                                    <Text style={styles.markerDescription}>{i.type + '\n' + '★'.repeat(i.rating) + '\n'
+                                    + '$'.repeat(i.price) + '\n' + 'Friends here: ' + markNum[index] }</Text>
                                 </View>
 
                             </View>

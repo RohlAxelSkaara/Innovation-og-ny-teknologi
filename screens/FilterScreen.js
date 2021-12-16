@@ -12,8 +12,6 @@ function FilterScreen({prop}) {
     const [currentRating, setCurrentRating] = useState()
 
     //Query the users filter settings, then save it to filter
-
-
     const [ratingFilter, setRating] = React.useState(1)
 
     const updateFilter = () =>{
@@ -29,7 +27,6 @@ function FilterScreen({prop}) {
     }
 
 
-    console.log(ratingFilter + 'hei')
 
 
     return(
@@ -44,6 +41,7 @@ function FilterScreen({prop}) {
                 Rating
             </Text>
 
+            {/*Source: https://www.npmjs.com/package/react-native-ratings*/}
             <AirbnbRating
                 defaultRating ={ratingFilter}
                 reviews={[]}
@@ -64,7 +62,7 @@ function FilterScreen({prop}) {
 
 export default FilterScreen
 
-//Lokal styling til brug i MapScreen
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
